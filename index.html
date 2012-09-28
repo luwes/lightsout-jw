@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Lights Out Plugin</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="mediaplayer"></div>
+	<script src="jwplayer.js"></script>
+	<script>
+		jwplayer("mediaplayer").setup({
+			//debug: 'console',
+			width: 520,
+			height: 300,
+			file: 'http://content.bitsontherun.com/videos/njZMLMwy-V2PBPAKH.m4v',
+			image: 'http://content.bitsontherun.com/thumbs/njZMLMwy-480.jpg',
+			plugins: {
+				'./lightsout.js':{},
+				'timeslidertooltipplugin-3':{}
+			},
+			modes: [
+				{ type: "flash", src: "./player.swf" },
+				{ type: "html5" }
+			]
+		});
+	</script>		
+</body>
+</html>
