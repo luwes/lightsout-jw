@@ -8,20 +8,25 @@
 	<div id="mediaplayer"></div>
 	<script src="jwplayer.js"></script>
 	<script>
-		jwplayer("mediaplayer").setup({
+		jwplayer('mediaplayer').setup({
 			//debug: 'console',
 			width: 520,
 			height: 300,
 			file: 'http://content.bitsontherun.com/videos/njZMLMwy-V2PBPAKH.m4v',
 			image: 'http://content.bitsontherun.com/thumbs/njZMLMwy-480.jpg',
 			plugins: {
-				'./lightsout.js':{}
+				'./1.1/lightsout.js':{}
 			},
 			modes: [
 				{ type: "flash", src: "./player.swf" },
 				{ type: "html5" }
 			]
 		});
-	</script>		
+	</script>
+	<p>
+		<a href="javascript:;" onclick="jwplayer().getPlugin('lightsout').on();">On</a> 
+		- <a href="javascript:;" onclick="jwplayer().getPlugin('lightsout').off();">Off</a> 
+		- <a href="javascript:;" onclick="jwplayer().getPlugin('lightsout').toggle();">Toggle</a> 
+	</p>
 </body>
 </html>
