@@ -1,3 +1,10 @@
+/** @license
+ * Lights Out Plugin
+ *
+ * Author: Wesley Luyten
+ * Version: 1.1 - (2012/11/21)
+ */
+
 (function(jwplayer) {
 
 	var scripts = document.getElementsByTagName("head")[0].getElementsByTagName('script');
@@ -9,8 +16,8 @@
 		}
 	}
 		
-	var main = function(player, config, div) {
-				
+	function main(player, config, div) {
+		
 		var _this = this;
 		var shade, lights;
 			
@@ -53,17 +60,16 @@
 
 			shade.onclick = turnOn;
 			
-			lights = new Fade(shade, config.time, config.opacity);
+			lights = new Lights(shade, config.time, config.opacity, sortPlayers);
+
+			//setup plugin api
+			_this.on = lights.on;
+			_this.off = lights.off;
+			_this.toggle = lights.toggle;
 					
 			if (config.dockicon === true && player.getPlugin("dock")) {
-				var lout_dock_out = mydir + 'lightsout_dock_out.png';
-				player.getPlugin("dock").setButton('lightsout', lights.toggle, lout_dock_out, lout_dock_out);
-			}
-			
-			if (player.getRenderingMode() == "html5") {
-				player.getContainer().style.zIndex = 301;
-			} else {
-				player.getContainer().parentNode.style.zIndex = 301;
+				var lout_dock_out = mydir + "lightsout_dock_out.png";
+				player.getPlugin('dock').setButton('lightsout', lights.toggle, lout_dock_out, lout_dock_out);
 			}
 			
 			player.onIdle(stateHandler);
@@ -72,28 +78,44 @@
 			player.onComplete(completeHandler);
 		}
 
+		function sortPlayers() {
+			var players = jwplayer.getPlayers();
+			for (var i = 0; i < players.length; i++) {
+				zIndex(players[i], 'auto');
+			}
+			zIndex(player, 301);
+		}
+
+		function zIndex(p, value) {
+			if (p.getRenderingMode() === "html5") {
+				p.getContainer().style.zIndex = value;
+			} else {
+				p.getContainer().parentNode.style.zIndex = value;
+			}
+		}
+
 		function turnOn() {
 			player.pause(true);
 			lights.on();
 		}
 
 		function completeHandler(data) {
-			if (config.oncomplete == 'off') lights.off();
+			if (config.oncomplete == "off") lights.off();
 			else lights.on();
 		}
 		
 		function stateHandler(data) {
 			switch (player.getState()) {
 				case 'IDLE':
-					if (config.onidle == 'off') lights.off();
+					if (config.onidle == "off") lights.off();
 					else lights.on();
 					break;
 				case 'PLAYING':
-					if (config.onplay == 'off') lights.off();
+					if (config.onplay == "off") lights.off();
 					else lights.on();
 					break;
 				case 'PAUSED':
-					if (config.onpause == 'off') lights.off();
+					if (config.onpause == "off") lights.off();
 					else lights.on();
 					break;
 			}
@@ -107,9 +129,9 @@
 		
 		this.resize = function(wid, hei) {
 		};
-	};
+	}
 	
-	var Fade = function(element, time, dark) {
+	function Lights(element, time, dark, callback) {
 		
 		this.element = element;
 		this.time = time || 1000;
@@ -120,27 +142,28 @@
 		var _this = this;
 		var interval;
 		
-		var supportOpacity = 'opacity' in _this.element.style;
-        if (!supportOpacity) _this.element.style.zoom = 1;
+		var supportOpacity = 'opacity' in this.element.style;
+        if (!supportOpacity) this.element.style.zoom = 1;
         
         function setOpacity(o) {
-            _this.element.style.opacity = '' + o;
-            _this.element.style.filter = 'alpha(opacity=' + Math.round(o*100) + ')';
+            _this.element.style.opacity = "" + o;
+            _this.element.style.filter = "alpha(opacity=" + Math.round(o*100) + ")";
 			_this.opacity = o;
         }
 		
 		this.off = function() {
+			if (typeof callback === "function") callback();
 			_this.element.style.display = "block";
 			clearInterval(interval);
 			var t0 = new Date().getTime();
 			var o0 = _this.opacity;
 			interval = setInterval(function() {
-				var dt= (new Date().getTime()-t0)/_this.time;
-				if (dt>=1) {
-					dt= 1;
+				var dt = (new Date().getTime() - t0) / _this.time;
+				if (dt >=1) {
+					dt = 1;
 					clearInterval(interval);
 				}
-				setOpacity(_this.dark*dt+o0*(1-dt));
+				setOpacity(_this.dark * dt + o0 * (1-dt));
 			}, 1000 / 60);
 		};
 		
@@ -149,13 +172,13 @@
 			var t0 = new Date().getTime();
 			var o0 = _this.opacity;
 			interval = setInterval(function() {
-				var dt= (new Date().getTime()-t0)/_this.time;
-				if (dt>=1) {
-					dt= 1;
+				var dt = (new Date().getTime() - t0) / _this.time;
+				if (dt >=1) {
+					dt = 1;
 					clearInterval(interval);
 					_this.element.style.display = "none";
 				}
-				setOpacity(0*dt+o0*(1-dt));
+				setOpacity(0 * dt + o0 * (1-dt));
 			}, 1000 / 60);
 		};
 		
@@ -166,7 +189,7 @@
 				_this.on();
 			}
 		};
-	};
+	}
 	
 	jwplayer().registerPlugin('lightsout', main);
 	
