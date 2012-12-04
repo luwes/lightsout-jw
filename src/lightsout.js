@@ -3,12 +3,13 @@
  *
  * Author: Wesley Luyten
  * Version: 1.1 - (2012/11/21)
+ * Version: 2.0 - (2012/12/04)
  */
 
 (function(jwplayer) {
 
 	var scripts = document.getElementsByTagName("head")[0].getElementsByTagName('script');
-	for (var i=0; i<scripts.length; i++) {
+	for (var i = 0; i < scripts.length; i++) {
 		var match = scripts[i].src.match(/(.*?)lightsout-?\d?\.js/);
 		if (match) {
 			var mydir = match[1];
@@ -67,9 +68,9 @@
 			_this.off = lights.off;
 			_this.toggle = lights.toggle;
 					
-			if (config.dockicon === true && player.getPlugin("dock")) {
+			if (config.dockicon === true && typeof player.addButton === "function") {
 				var lout_dock_out = mydir + "lightsout_dock_out.png";
-				player.getPlugin('dock').setButton('lightsout', lights.toggle, lout_dock_out, lout_dock_out);
+				player.addButton(lout_dock_out, 'Toggle Light', lights.toggle, 'lightsout');
 			}
 			
 			player.onIdle(stateHandler);
@@ -79,9 +80,10 @@
 		}
 
 		function sortPlayers() {
-			var players = jwplayer.getPlayers();
-			for (var i = 0; i < players.length; i++) {
-				zIndex(players[i], 'auto');
+			var i = 0;
+			var p;
+			while ((p = jwplayer(i++))) {
+				zIndex(p, 'auto');
 			}
 			zIndex(player, 301);
 		}
@@ -191,6 +193,6 @@
 		};
 	}
 	
-	jwplayer().registerPlugin('lightsout', main);
+	jwplayer().registerPlugin('lightsout', '6.0', main);
 	
 })(jwplayer);
