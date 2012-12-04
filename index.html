@@ -10,23 +10,20 @@
 	<script>
 		jwplayer('mediaplayer').setup({
 			//debug: 'console',
+			//primary: 'flash',
 			width: 520,
 			height: 300,
 			file: 'http://content.bitsontherun.com/videos/njZMLMwy-V2PBPAKH.m4v',
 			image: 'http://content.bitsontherun.com/thumbs/njZMLMwy-480.jpg',
 			plugins: {
-				'./1.1/lightsout.js':{}
-			},
-			modes: [
-				{ type: "flash", src: "./player.swf" },
-				{ type: "html5" }
-			]
+				'./2.0/lightsout.js':{}
+			}
 		});
 	</script>
 	<p>
-		<a href="javascript:;" onclick="jwplayer().getPlugin('lightsout').on();">On</a> 
-		- <a href="javascript:;" onclick="jwplayer().getPlugin('lightsout').off();">Off</a> 
-		- <a href="javascript:;" onclick="jwplayer().getPlugin('lightsout').toggle();">Toggle</a> 
+		<a href="javascript:;" onclick="jwplayer().plugins['lightsout'].on();">On</a> 
+		- <a href="javascript:;" onclick="jwplayer().plugins['lightsout'].off();">Off</a> 
+		- <a href="javascript:;" onclick="jwplayer().plugins['lightsout'].toggle();">Toggle</a> 
 	</p>
 </body>
 </html>
