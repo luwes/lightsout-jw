@@ -82,7 +82,7 @@
 		function sortPlayers() {
 			var i = 0;
 			var p;
-			while ((p = jwplayer(i++))) {
+			while ((p = jwplayer(i++)) && p.hasOwnProperty('id') && i < 100) {
 				zIndex(p, 'auto');
 			}
 			zIndex(player, 301);
